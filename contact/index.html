@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Contact Belgrave Consultancy</title>
-<meta name="description" content="Discuss a project, ask about ERP readiness or the guide, or just ask a question. Mwata Belgrave replies personally.">
+<meta name="description" content="Discuss your situation, ask about strategy, organisation, AI, ERP or the guide, or just ask a question. Mwata Belgrave replies personally.">
 
 <link rel="canonical" href="https://www.belgraveconsultancy.com/contact/">
 
@@ -12,7 +12,7 @@
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Belgrave Consultancy">
 <meta property="og:title" content="Contact Belgrave Consultancy">
-<meta property="og:description" content="Discuss a project, ask about ERP readiness or the guide, or just ask a question. Mwata Belgrave replies personally.">
+<meta property="og:description" content="Discuss your situation, ask about strategy, organisation, AI, ERP or the guide, or just ask a question. Mwata Belgrave replies personally.">
 <meta property="og:image" content="https://www.belgraveconsultancy.com/assets/img/og-image.jpg">
 <meta name="twitter:card" content="summary_large_image">
 <link rel="icon" type="image/png" href="../assets/img/favicon-32.png" sizes="32x32">
@@ -32,7 +32,7 @@
     </a>
     <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-nav">Menu</button>
     <nav class="nav" id="site-nav" aria-label="Main">
-      <a href="../#consultancy">Consultancy</a>
+      <a href="../consultancy/">Consultancy</a>
       <a href="../#experience">Experience</a>
       <a href="../products/">Products</a>
       <a href="../about/">About</a>
@@ -45,7 +45,7 @@
   <div class="wrap">
     <p class="eyebrow">Contact</p>
     <h1>Tell me what you are facing.</h1>
-    <p class="lede">A slipping project, a system decision or a strategy reset. Send a few lines and I will reply personally, usually with a suggestion for a 30-minute conversation.</p>
+    <p class="lede">An organisation that has outgrown its structure, a change of direction, a slipping project, a system or AI question. Send a few lines and I will reply personally, usually with a suggestion for a 30-minute conversation.</p>
   </div>
 </section>
 <section class="section">
@@ -57,13 +57,16 @@
       <div class="field"><label for="c-subject">What is this about?</label>
         <select id="c-subject" name="subject" required>
           <option value="">Choose a subject</option>
-          <option>I would like to discuss a project</option>
-          <option>Project control and reporting</option>
-          <option>ERP readiness or selection</option>
-          <option>Commercial strategy and proposals</option>
-          <option>A question about the ERP guide</option>
-          <option>Bid Advisor</option>
-          <option>General question</option>
+          <option value="I would like to discuss my situation" data-topic="consultancy">I would like to discuss my situation</option>
+          <option value="Strategy and organisation" data-topic="strategy">Strategy and organisation</option>
+          <option value="Management coaching and sparring" data-topic="coaching">Management coaching and sparring</option>
+          <option value="Budgeting, steering and commercial strategy" data-topic="steering">Budgeting, steering and commercial strategy</option>
+          <option value="Project control, ERP and systems" data-topic="delivery">Project control, ERP and systems</option>
+          <option value="AI: where could it help my company?" data-topic="ai">AI: where could it help my company?</option>
+          <option value="An ERP readiness review" data-topic="erp-review">An ERP readiness review</option>
+          <option value="A question about the ERP guide" data-topic="guide">A question about the ERP guide</option>
+          <option value="Bid Advisor" data-topic="bid">Bid Advisor</option>
+          <option value="General question" data-topic="general">General question</option>
         </select>
       </div>
       <div class="field"><label for="c-message">Your message</label><textarea id="c-message" name="message" required></textarea></div>
@@ -77,8 +80,7 @@
         <dt>Email</dt><dd><a href="mailto:info@belgraveconsultancy.com">info@belgraveconsultancy.com</a></dd>
         <dt>WhatsApp</dt><dd><a href="https://wa.me/351927661618">+351 927 661 618</a></dd>
         <dt>LinkedIn</dt><dd><a href="https://www.linkedin.com/in/mwatabelgrave/" rel="noopener">Mwata Belgrave</a></dd>
-        <dt>Advisory session</dt><dd>Prefer to book a one-hour session directly? <a href="https://calendly.com/belgraveconsultancy/advisory-session" rel="noopener">Choose a time</a>.</dd>
-        <dt>Where</dt><dd>Portugal, working across Europe. Hybrid or remote, with time on site at key moments. English and Dutch.</dd>
+        <dt>Where</dt><dd>Portugal, working across Europe. Remote by default, on site for key moments. English and Dutch.</dd>
       </dl>
     </aside>
   </div>
@@ -89,15 +91,16 @@
     <div class="foot-grid">
       <div class="foot-brand">
         <img src="../assets/img/belgrave-wordmark-paper.png" width="170" height="24" alt="Belgrave Consultancy">
-        <p>Independent consultancy for energy and engineering businesses, led by Mwata Belgrave.</p>
+        <p>Independent consultancy for growing and changing companies, led by Mwata Belgrave.</p>
       </div>
       <div>
         <h4>Consultancy</h4>
         <ul>
-          <li><a href="../#consultancy">Where I can help</a></li>
+          <li><a href="../#problems">Situations I help with</a></li>
+          <li><a href="../consultancy/">Services and expertise</a></li>
+          <li><a href="../consultancy/#ai">AI and the operating model</a></li>
           <li><a href="../#experience">Selected experience</a></li>
           <li><a href="../about/">About Mwata</a></li>
-          <li><a href="../contact/">Contact</a></li>
         </ul>
       </div>
       <div>
@@ -112,6 +115,7 @@
       <div>
         <h4>Get in touch</h4>
         <ul>
+          <li><a href="../contact/">Contact form</a></li>
           <li><a href="mailto:info@belgraveconsultancy.com">info@belgraveconsultancy.com</a></li>
           <li><a href="https://wa.me/351927661618">WhatsApp +351 927 661 618</a></li>
           <li><a href="https://www.linkedin.com/in/mwatabelgrave/" rel="noopener">LinkedIn</a></li>

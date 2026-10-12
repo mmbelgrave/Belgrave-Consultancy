@@ -17,9 +17,14 @@
     });
   }
 
-  /* feature switches */
-  if (!cfg.showReview) {
-    document.querySelectorAll("[data-feature='review']").forEach(function (el) { el.hidden = true; });
+  /* contact form: pre-select the subject from a link such as /contact/?topic=ai */
+  var subject = document.getElementById("c-subject");
+  if (subject) {
+    var topic = new URLSearchParams(window.location.search).get("topic");
+    if (topic) {
+      var opt = subject.querySelector("option[data-topic='" + topic.replace(/[^a-z-]/g, "") + "']");
+      if (opt) { subject.value = opt.value; }
+    }
   }
 
   /* reveal on scroll */

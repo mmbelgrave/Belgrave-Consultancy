@@ -34,7 +34,7 @@ for (const file of pages) {
     `<a href="${href}"${nav === key ? ' aria-current="page"' : ""}>${label}</a>`;
   // Two paths: work with Mwata (Consultancy, Experience, About) and use a product (Products).
   vars.navlinks = [
-    navLink("consultancy", home + "#consultancy", "Consultancy"),
+    navLink("consultancy", root + "consultancy/", "Consultancy"),
     navLink("experience", home + "#experience", "Experience"),
     navLink("products", root + "products/", "Products"),
     navLink("about", root + "about/", "About"),
