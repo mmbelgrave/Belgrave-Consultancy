@@ -36,13 +36,13 @@ for (const file of pages) {
   vars.navlinks = [
     navLink("consultancy", root + "consultancy/", "Consultancy"),
     navLink("experience", home + "#experience", "Experience"),
-    navLink("products", root + "products/", "Products"),
+    navLink("guide", root + "guide/", "ERP guide"),
     navLink("about", root + "about/", "About"),
   ].join("\n      ");
   // Header action: consultancy pages ask for an enquiry; product pages can set their own.
-  const cta = meta.cta || { label: "Discuss your project", href: "contact/" };
+  const cta = meta.cta || { label: "Discuss your situation", href: "contact/?topic=consultancy" };
   vars.ctaLabel = cta.label;
-  vars.ctaHref = cta.href.startsWith("#") ? cta.href : root + cta.href;
+  vars.ctaHref = /^(#|https?:)/.test(cta.href) ? cta.href : root + cta.href;
   vars.contactActive = nav === "contact" ? ' aria-current="page"' : "";
   vars.extra = meta.extra ? meta.extra.replace(/\{\{root\}\}/g, root) : "";
 

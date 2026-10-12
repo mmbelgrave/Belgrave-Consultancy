@@ -22,7 +22,13 @@
   if (subject) {
     var topic = new URLSearchParams(window.location.search).get("topic");
     if (topic) {
-      var opt = subject.querySelector("option[data-topic='" + topic.replace(/[^a-z-]/g, "") + "']");
+      var key = topic.replace(/[^a-z-]/g, "");
+      var opt = subject.querySelector("option[data-topic='" + key + "']");
+      if (!opt && key === "bid") {
+        opt = document.createElement("option");
+        opt.value = "Bid Advisor"; opt.textContent = "Bid Advisor"; opt.setAttribute("data-topic", "bid");
+        subject.appendChild(opt);
+      }
       if (opt) { subject.value = opt.value; }
     }
   }
@@ -69,15 +75,18 @@
     var dlg = document.createElement("dialog");
     dlg.className = "lightbox";
     dlg.setAttribute("aria-label", "Enlarged sample");
-    dlg.innerHTML = '<div class="lightbox-inner"><button class="lightbox-close" type="button">Close</button><div class="lightbox-body"></div></div>';
+    dlg.innerHTML = '<div class="lightbox-inner"><div class="lightbox-bar"><span class="lightbox-title"></span><button class="lightbox-close" type="button">Close</button></div><div class="lightbox-body"></div></div>';
     document.body.appendChild(dlg);
     var body = dlg.querySelector(".lightbox-body");
+    var ttl = dlg.querySelector(".lightbox-title");
     var close = function () { if (dlg.open) { dlg.close(); } };
     dlg.querySelector(".lightbox-close").addEventListener("click", close);
     dlg.addEventListener("click", function (e) { if (e.target === dlg) { close(); } });
     triggers.forEach(function (t) {
       t.addEventListener("click", function () {
         body.innerHTML = "";
+        ttl.textContent = t.getAttribute("data-title") || "";
+        dlg.setAttribute("aria-label", t.getAttribute("data-title") || "Enlarged sample");
         var src = t.getAttribute("data-lightbox");
         if (src) {
           var img = new Image();
