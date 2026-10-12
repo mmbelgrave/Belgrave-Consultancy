@@ -32,14 +32,19 @@ for (const file of pages) {
   const nav = meta.nav || "";
   const navLink = (key, href, label) =>
     `<a href="${href}"${nav === key ? ' aria-current="page"' : ""}>${label}</a>`;
+  // Two paths: work with Mwata (Consultancy, Experience, About) and use a product (Products).
   vars.navlinks = [
-    navLink("expertise", home + "#expertise", "Expertise"),
+    navLink("consultancy", home + "#consultancy", "Consultancy"),
     navLink("experience", home + "#experience", "Experience"),
-    navLink("guide", root + "guide/", "ERP guide"),
-    navLink("tools", root + "free-tools/", "Free tools"),
-    navLink("about", home + "#about", "About"),
+    navLink("products", root + "products/", "Products"),
+    navLink("about", root + "about/", "About"),
   ].join("\n      ");
+  // Header action: consultancy pages ask for an enquiry; product pages can set their own.
+  const cta = meta.cta || { label: "Discuss your project", href: "contact/" };
+  vars.ctaLabel = cta.label;
+  vars.ctaHref = cta.href.startsWith("#") ? cta.href : root + cta.href;
   vars.contactActive = nav === "contact" ? ' aria-current="page"' : "";
+  vars.extra = meta.extra ? meta.extra.replace(/\{\{root\}\}/g, root) : "";
 
   const apply = (s) => s.replace(/\{\{(\w+)\}\}/g, (_, k) => (k in vars ? vars[k] : "{{" + k + "}}"));
   const html = apply(partial("head")) + apply(partial("header")) + apply(body) + apply(partial("footer"));
