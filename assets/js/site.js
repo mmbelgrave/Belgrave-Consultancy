@@ -85,6 +85,8 @@
     triggers.forEach(function (t) {
       t.addEventListener("click", function () {
         body.innerHTML = "";
+        var hint = t.getAttribute("data-hint");
+        if (hint) { var hp = document.createElement("p"); hp.className = "swipe-hint"; hp.textContent = hint; body.appendChild(hp); }
         ttl.textContent = t.getAttribute("data-title") || "";
         dlg.setAttribute("aria-label", t.getAttribute("data-title") || "Enlarged sample");
         var src = t.getAttribute("data-lightbox");
@@ -117,8 +119,8 @@
         total += parseInt(chosen.value, 10);
       }
       var msg, label;
-      if (total <= 7) { label = "Start with preparation"; msg = "On these three points the groundwork is thin. That is common, and it is the cheapest time to fix it. Begin with how your processes really run and why you are doing this at all."; }
-      else if (total <= 11) { label = "Prepare first"; msg = "Some groundwork is in place, with real gaps. Close the lowest-scoring area before you talk to a single vendor."; }
+      if (total <= 7) { label = "Start with preparation"; msg = "These answers suggest that some foundations need attention. Start by clarifying how the work runs, what the ERP needs to improve and who will lead the preparation."; }
+      else if (total <= 11) { label = "Prepare first"; msg = "Some foundations are in place. Review the lowest-scoring area with your team before committing to a system or implementation plan."; }
       else { label = "Looking solid"; msg = "These three foundations look strong. The full scorecard tests the other four: internal capacity, data quality, budget realism and change readiness."; }
       result.hidden = false;
       result.querySelector(".score").innerHTML = total + "<small> / 15</small>";
