@@ -44,7 +44,12 @@
     items.forEach(function (el) { el.classList.add("in"); });
   }
 
-  /* forms: until an endpoint is configured, open a ready-to-send email instead */
+  /* forms
+     - contact: posts to the form service in config (falls back to a ready-to-send email)
+     - scorecard, costing: MailerLite. The checkbox picks the form: with follow-up emails (double opt-in)
+       or without. On success the visitor gets the download link straight away.
+     - bid: MailerLite for the email address; the written answers also go to the contact service if set */
+  var MAIL = "info@belgraveconsultancy.com";
   var SUBJECTS = {
     contact: "Enquiry from the website",
     scorecard: "Please send me the ERP readiness scorecard",
@@ -60,33 +65,84 @@
       lines.push(k + ": " + v);
     });
     var subject = kind === "contact" && subjectField ? String(subjectField) : SUBJECTS[kind] || "Website enquiry";
-    var href = "mailto:info@belgraveconsultancy.com?subject=" + encodeURIComponent(subject) + "&body=" + encodeURIComponent(lines.join("\n"));
-    window.location.href = href;
-    say("Your email app should open with your message ready to send. If it does not, write to info@belgraveconsultancy.com.", "ok");
+    window.location.href = "mailto:" + MAIL + "?subject=" + encodeURIComponent(subject) + "&body=" + encodeURIComponent(lines.join("\n"));
+    say("Your email app should open with your message ready to send. If it does not, write to " + MAIL + ".", "ok");
+  }
+  function subscribe(endpoint, email) {
+    var body = new FormData();
+    body.append("fields[email]", email);
+    body.append("ml-submit", "1");
+    body.append("anticsrf", "true");
+    return fetch(endpoint, { method: "POST", body: body }).then(function (r) {
+      if (!r.ok) { throw new Error("status " + r.status); }
+      return r.json().catch(function () { return { success: true }; });
+    }).then(function (j) {
+      if (j && j.success === false) { throw new Error("rejected"); }
+      return j;
+    });
   }
 
-  /* forms */
   document.querySelectorAll("form[data-form]").forEach(function (form) {
     form.addEventListener("submit", function (e) {
       e.preventDefault();
+      var kind = form.getAttribute("data-form");
       var status = form.querySelector(".form-status");
       var hp = form.querySelector(".hp input");
       if (hp && hp.value) { return; }
       if (!form.checkValidity()) { form.reportValidity(); return; }
-      var endpoint = (cfg.forms || {})[form.getAttribute("data-form")];
-      function say(msg, cls) { if (status) { status.textContent = msg; status.className = "form-status " + cls; } }
-      if (!endpoint) { mailFallback(form, say); return; }
+      var conf = (cfg.forms || {})[kind];
       var btn = form.querySelector("button[type=submit]");
-      if (btn) { btn.disabled = true; }
-      say("Sending...", "");
-      fetch(endpoint, { method: "POST", body: new FormData(form), headers: { Accept: "application/json" } })
-        .then(function (r) {
-          if (!r.ok) { throw new Error("bad status"); }
-          form.reset();
-          say(form.getAttribute("data-ok") || "Thank you. Your message has been sent.", "ok");
-        })
-        .catch(function () { say("Something went wrong. Please email info@belgraveconsultancy.com.", "err"); })
-        .then(function () { if (btn) { btn.disabled = false; } });
+      function say(msg, cls) { if (status) { status.textContent = msg; status.className = "form-status " + cls; } }
+      function done(msg, link, linkText) {
+        form.reset();
+        if (!status) { return; }
+        status.className = "form-status ok";
+        status.textContent = msg + " ";
+        if (link) { var a = document.createElement("a"); a.href = link; a.textContent = linkText; a.setAttribute("download", ""); status.appendChild(a); }
+      }
+      function fail() { say("Something went wrong. Please email " + MAIL + " and I will send it to you.", "err"); }
+      function busy(on) { if (btn) { btn.disabled = on; } }
+
+      if (kind === "scorecard" || kind === "costing") {
+        var wantsFollowUp = !!(form.querySelector("input[name=followup]") || {}).checked;
+        var endpoint = conf && (wantsFollowUp ? conf.followup : conf.plain);
+        if (!endpoint) { mailFallback(form, say); return; }
+        busy(true); say("Sending...", "");
+        subscribe(endpoint, form.querySelector("input[name=email]").value)
+          .then(function () {
+            var what = kind === "scorecard" ? "scorecard" : "checklist";
+            var msg = "Thank you." + (wantsFollowUp ? " A confirmation email is on its way: please click the link in it to receive follow-up emails." : "");
+            done(msg, conf.download, "Download the " + what + " (PDF)");
+          })
+          .catch(fail).then(function () { busy(false); });
+        return;
+      }
+
+      if (kind === "bid") {
+        var ml = conf && conf.mailerlite;
+        if (!ml) { mailFallback(form, say); return; }
+        busy(true); say("Sending...", "");
+        var answers = new FormData(form);
+        subscribe(ml, form.querySelector("input[name=email]").value)
+          .then(function () {
+            var extra = (cfg.forms || {}).contact;
+            if (extra && typeof extra === "string") {
+              answers.append("subject", "Bid Advisor interest");
+              return fetch(extra, { method: "POST", body: answers, headers: { Accept: "application/json" } }).catch(function () {});
+            }
+          })
+          .then(function () { done(form.getAttribute("data-ok") || "Thank you. I have your answer."); })
+          .catch(fail).then(function () { busy(false); });
+        return;
+      }
+
+      /* contact */
+      var cEndpoint = typeof conf === "string" ? conf : "";
+      if (!cEndpoint) { mailFallback(form, say); return; }
+      busy(true); say("Sending...", "");
+      fetch(cEndpoint, { method: "POST", body: new FormData(form), headers: { Accept: "application/json" } })
+        .then(function (r) { if (!r.ok) { throw new Error("bad status"); } done(form.getAttribute("data-ok") || "Thank you. Your message has been sent."); })
+        .catch(fail).then(function () { busy(false); });
     });
   });
 
