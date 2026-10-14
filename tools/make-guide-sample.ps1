@@ -8,11 +8,12 @@
 param(
   [Parameter(Mandatory = $true)][string]$Pdf,
   [int]$LastPage = 10,
-  [int]$Width = 1100
+  [int]$Width = 1100,
+  [string]$OutDir = ""
 )
 
 $ErrorActionPreference = "Stop"
-$out = Join-Path (Split-Path $PSScriptRoot -Parent) "assets\img\sample"
+$out = if ($OutDir) { $OutDir } else { Join-Path (Split-Path $PSScriptRoot -Parent) "assets\img\sample" }
 New-Item -ItemType Directory -Force $out | Out-Null
 Get-ChildItem $out -Filter "page-*.jpg" -ErrorAction SilentlyContinue | Remove-Item -Force
 
