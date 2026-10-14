@@ -44,6 +44,27 @@
     items.forEach(function (el) { el.classList.add("in"); });
   }
 
+  /* forms: until an endpoint is configured, open a ready-to-send email instead */
+  var SUBJECTS = {
+    contact: "Enquiry from the website",
+    scorecard: "Please send me the ERP readiness scorecard",
+    costing: "Please send me the project costing checklist",
+    bid: "Bid Advisor interest"
+  };
+  function mailFallback(form, say) {
+    var kind = form.getAttribute("data-form");
+    var data = new FormData(form), lines = [];
+    var subjectField = data.get("subject");
+    data.forEach(function (v, k) {
+      if (k === "website" || k === "consent" || !String(v).trim()) { return; }
+      lines.push(k + ": " + v);
+    });
+    var subject = kind === "contact" && subjectField ? String(subjectField) : SUBJECTS[kind] || "Website enquiry";
+    var href = "mailto:info@belgraveconsultancy.com?subject=" + encodeURIComponent(subject) + "&body=" + encodeURIComponent(lines.join("\n"));
+    window.location.href = href;
+    say("Your email app should open with your message ready to send. If it does not, write to info@belgraveconsultancy.com.", "ok");
+  }
+
   /* forms */
   document.querySelectorAll("form[data-form]").forEach(function (form) {
     form.addEventListener("submit", function (e) {
@@ -54,7 +75,7 @@
       if (!form.checkValidity()) { form.reportValidity(); return; }
       var endpoint = (cfg.forms || {})[form.getAttribute("data-form")];
       function say(msg, cls) { if (status) { status.textContent = msg; status.className = "form-status " + cls; } }
-      if (!endpoint) { say("This form is not connected yet, so nothing was sent. Please email info@belgraveconsultancy.com.", "err"); return; }
+      if (!endpoint) { mailFallback(form, say); return; }
       var btn = form.querySelector("button[type=submit]");
       if (btn) { btn.disabled = true; }
       say("Sending...", "");
