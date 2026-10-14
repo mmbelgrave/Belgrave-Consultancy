@@ -47,7 +47,7 @@ for (const file of pages) {
   vars.extra = meta.extra ? meta.extra.replace(/\{\{root\}\}/g, root) : "";
 
   const apply = (s) => s.replace(/\{\{(\w+)\}\}/g, (_, k) => (k in vars ? vars[k] : "{{" + k + "}}"));
-  const html = apply(partial("head")) + apply(partial("header")) + apply(body) + apply(partial("footer"));
+  const html = apply(partial("head")) + apply(partial("header")) + apply(body) + apply(partial(meta.footer === "compact" ? "footer-compact" : "footer"));
 
   const out = isHome ? "index.html" : is404 ? "404.html" : join(slug, "index.html");
   if (!isHome && !is404) mkdirSync(slug, { recursive: true });
