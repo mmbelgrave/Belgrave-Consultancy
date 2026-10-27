@@ -44,6 +44,31 @@
     items.forEach(function (el) { el.classList.add("in"); });
   }
 
+  /* visitor events: counted by GoatCounter (no cookies); names are defined in the event dictionary */
+  function track(name) {
+    try { if (window.goatcounter && window.goatcounter.count) { window.goatcounter.count({ path: name, title: name, event: true }); } } catch (e) {}
+  }
+  document.addEventListener("click", function (e) {
+    var a = e.target.closest ? e.target.closest("a") : null;
+    if (!a) { return; }
+    var h = a.getAttribute("href") || "";
+    if (h.indexOf("store.belgraveconsultancy.com/checkout") !== -1) { track("guide-checkout-click"); }
+    else if (a.hasAttribute("download")) { track("resource-download"); }
+    else if (h.indexOf("wa.me/") !== -1) { track("whatsapp-click"); }
+    else if (h.indexOf("mailto:") === 0) { track("email-click"); }
+    else if (h.indexOf("contact/?topic=consultancy") !== -1) { track("cta-consultancy-click"); }
+    else if (h.indexOf("guide-sample/") !== -1) { track("guide-sample-open"); }
+  });
+  var started = {};
+  document.addEventListener("focusin", function (e) {
+    var f = e.target.closest ? e.target.closest("form[data-form]") : null;
+    if (!f) { return; }
+    var kind = f.getAttribute("data-form");
+    if (started[kind]) { return; }
+    started[kind] = true;
+    track(kind === "contact" ? "contact-form-start" : kind === "bid" ? "bid-form-start" : "resource-form-start");
+  });
+
   /* forms
      - contact: posts to the form service in config (falls back to a ready-to-send email)
      - scorecard, costing: MailerLite. The checkbox picks the form: with follow-up emails (double opt-in)
@@ -112,6 +137,7 @@
           .then(function () {
             var what = kind === "scorecard" ? "scorecard" : "checklist";
             var msg = "Thank you." + (wantsFollowUp ? " A confirmation email is on its way: please click the link in it to receive follow-up emails." : "");
+            track("resource-signup-" + (wantsFollowUp ? "updates" : "plain"));
             done(msg, conf.download, "Download the " + what + " (PDF)");
           })
           .catch(fail).then(function () { busy(false); });
@@ -131,7 +157,7 @@
               return fetch(extra, { method: "POST", body: answers, headers: { Accept: "application/json" } }).catch(function () {});
             }
           })
-          .then(function () { done(form.getAttribute("data-ok") || "Thank you. I have your answer."); })
+          .then(function () { track("bid-interest-sent"); done(form.getAttribute("data-ok") || "Thank you. I have your answer."); })
           .catch(fail).then(function () { busy(false); });
         return;
       }
@@ -141,7 +167,7 @@
       if (!cEndpoint) { mailFallback(form, say); return; }
       busy(true); say("Sending...", "");
       fetch(cEndpoint, { method: "POST", body: new FormData(form), headers: { Accept: "application/json" } })
-        .then(function (r) { if (!r.ok) { throw new Error("bad status"); } done(form.getAttribute("data-ok") || "Thank you. Your message has been sent."); })
+        .then(function (r) { if (!r.ok) { throw new Error("bad status"); } track("contact-form-sent"); done(form.getAttribute("data-ok") || "Thank you. Your message has been sent."); })
         .catch(fail).then(function () { busy(false); });
     });
   });

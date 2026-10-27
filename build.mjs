@@ -24,7 +24,7 @@ for (const file of pages) {
   const vars = {
     root, home, canonical,
     title: meta.title, description: meta.description,
-    ogimage: SITE + "/assets/img/og-image.jpg",
+    ogimage: SITE + "/assets/img/og-image-2.jpg",
     robots: meta.noindex ? '<meta name="robots" content="noindex">' : "",
     canonicalTag: canonical ? `<link rel="canonical" href="${canonical}">` : "",
     year: String(new Date().getFullYear()),
@@ -45,6 +45,12 @@ for (const file of pages) {
   vars.ctaHref = /^(#|https?:)/.test(cta.href) ? cta.href : root + cta.href;
   vars.contactActive = nav === "contact" ? ' aria-current="page"' : "";
   vars.extra = meta.extra ? meta.extra.replace(/\{\{root\}\}/g, root) : "";
+  // Structured data: meta.jsonld is one object or a list of objects, written as JSON-LD in the head
+  if (meta.jsonld) {
+    for (const obj of [].concat(meta.jsonld)) {
+      vars.extra += '\n<script type="application/ld+json">' + JSON.stringify(obj).replace(/</g, "\\u003c") + "</script>";
+    }
+  }
 
   const apply = (s) => s.replace(/\{\{(\w+)\}\}/g, (_, k) => (k in vars ? vars[k] : "{{" + k + "}}"));
   const html = apply(partial("head")) + apply(partial("header")) + apply(body) + apply(partial(meta.footer === "compact" ? "footer-compact" : "footer"));
