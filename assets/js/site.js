@@ -17,19 +17,17 @@
     });
   }
 
-  /* contact form: pre-select the subject from a link such as /contact/?topic=ai */
-  var subject = document.getElementById("c-subject");
-  if (subject) {
-    var topic = new URLSearchParams(window.location.search).get("topic");
-    if (topic) {
-      var key = topic.replace(/[^a-z-]/g, "");
-      var opt = subject.querySelector("option[data-topic='" + key + "']");
-      if (!opt && key === "bid") {
-        opt = document.createElement("option");
-        opt.value = "Bid Advisor"; opt.textContent = "Bid Advisor"; opt.setAttribute("data-topic", "bid");
-        subject.appendChild(opt);
-      }
-      if (opt) { subject.value = opt.value; }
+  /* contact page: the "Write to me" button opens an email with a subject that matches a link such as /contact/?topic=ai */
+  var writeBtn = document.getElementById("write-btn");
+  if (writeBtn) {
+    var subjects = {
+      consultancy: "Discuss my business situation", strategy: "Strategy and planning", organisation: "Organisation",
+      performance: "Budgets and project performance", coaching: "Management support", erp: "ERP and systems",
+      ai: "Practical AI advice", guide: "A question about the ERP guide", bid: "Bid Advisor", other: "Something else"
+    };
+    var topic = (new URLSearchParams(window.location.search).get("topic") || "").replace(/[^a-z-]/g, "");
+    if (subjects[topic]) {
+      writeBtn.setAttribute("href", "mailto:info@belgraveconsultancy.com?subject=" + encodeURIComponent(subjects[topic]));
     }
   }
 
