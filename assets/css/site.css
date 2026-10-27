@@ -653,3 +653,7 @@ details.bid-form:last-of-type{border-bottom:0}
 .sit-icon{display:flex;align-items:center;justify-content:center;width:68px;height:68px;border-radius:50%;background:var(--white);border:1px solid var(--rule-strong);color:var(--navy);margin-bottom:16px}
 .sit-icon svg{width:42px;height:42px}
 .sit-icon .ac{stroke:var(--oxblood)}
+.svc2 .sit-icon{width:56px;height:56px;margin-bottom:14px}
+.svc2 .sit-icon svg{width:34px;height:34px}
+.steps .sit-icon{width:52px;height:52px;margin-bottom:12px}
+.steps .sit-icon svg{width:32px;height:32px}
