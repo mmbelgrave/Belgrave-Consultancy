@@ -41,7 +41,10 @@ for (const file of pages) {
   ].join("\n      ");
   // Header action: consultancy pages ask for an enquiry; product pages can set their own.
   const cta = meta.cta || { label: "Discuss your situation", href: "contact/?topic=consultancy" };
-  vars.ctaLabel = cta.label;
+  const quick = nav === "guide" ? { label: "ERP guide", href: "guide/" } : { label: "Contact", href: "contact/?topic=consultancy" };
+vars.quickLabel = quick.label;
+vars.quickHref = root + quick.href;
+vars.ctaLabel = cta.label;
   vars.ctaHref = /^(#|https?:)/.test(cta.href) ? cta.href : root + cta.href;
   vars.contactActive = nav === "contact" ? ' aria-current="page"' : "";
   vars.extra = meta.extra ? meta.extra.replace(/\{\{root\}\}/g, root) : "";
