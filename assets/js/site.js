@@ -222,7 +222,7 @@
       var msg, label;
       if (total <= 7) { label = "Start with preparation"; msg = "These answers suggest that some foundations need attention. Start by clarifying how the work runs, what the ERP needs to improve and who will lead the preparation."; }
       else if (total <= 11) { label = "Prepare first"; msg = "Some foundations are in place. Review the lowest-scoring area with your team before committing to a system or implementation plan."; }
-      else { label = "Looking solid"; msg = "These three foundations look strong. The full scorecard tests the other four: internal capacity, data quality, budget realism and change readiness."; }
+      else { label = "A strong starting point"; msg = "These three foundations look strong. The full scorecard tests the other four: internal capacity, data quality, budget realism and change readiness."; }
       result.hidden = false;
       result.querySelector(".score").innerHTML = total + "<small> / 15</small>";
       result.querySelector(".label").textContent = label;
