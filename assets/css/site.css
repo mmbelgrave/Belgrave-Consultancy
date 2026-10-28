@@ -669,3 +669,9 @@ details.bid-form:last-of-type{border-bottom:0}
 
 .buy-split{display:grid;grid-template-columns:minmax(0,2fr) minmax(0,1fr);gap:32px;align-items:start}
 @media (max-width:860px){.buy-split{grid-template-columns:1fr}}
+/* polish pass: short pages keep the footer at the bottom; tighter hero; contact inset */
+body{min-height:100vh;display:flex;flex-direction:column}
+main{flex:1 0 auto}
+.site-header,.site-footer{flex:0 0 auto}
+.hero2{padding-bottom:clamp(52px,8vw,104px)}
+@media (min-width:861px){.contact-fit{padding-top:clamp(32px,6vh,56px)}}
