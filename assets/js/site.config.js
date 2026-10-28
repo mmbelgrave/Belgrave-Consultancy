@@ -4,6 +4,7 @@ window.BELGRAVE_CONFIG = {
     // Contact form service: Formspree. Clearing it makes the form open a ready-to-send email instead.
     // 
     contact: "https://formspree.io/f/xbgdznpj",
+    withdraw: "https://formspree.io/f/xbgdznpj",
 
     // MailerLite (account 2320211). "plain" = no follow-up emails (no double opt-in),
     // "followup" = follow-up emails (double opt-in). "download" is shown after signing up.
