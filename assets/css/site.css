@@ -657,3 +657,14 @@ details.bid-form:last-of-type{border-bottom:0}
 .svc2 .sit-icon svg{width:34px;height:34px}
 .steps .sit-icon{width:52px;height:52px;margin-bottom:12px}
 .steps .sit-icon svg{width:32px;height:32px}
+
+/* home situations: links sit at the same height in each row */
+.situation{display:flex;flex-direction:column}
+.situation .tag{margin-top:auto;padding-top:.4em}
+@media (min-width:861px){.situation .tag{min-height:3.6em}}
+/* guide: purchase block full width */
+.price--wide{max-width:none}
+/* footer: centred */
+.legal{justify-content:center;text-align:center}
+.foot-brand,.foot-grid{text-align:center}
+.foot-brand .brand{display:inline-block}
