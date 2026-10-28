@@ -17,19 +17,17 @@
     });
   }
 
-  /* contact form: pre-select the subject from a link such as /contact/?topic=ai */
-  var subject = document.getElementById("c-subject");
-  if (subject) {
-    var topic = new URLSearchParams(window.location.search).get("topic");
-    if (topic) {
-      var key = topic.replace(/[^a-z-]/g, "");
-      var opt = subject.querySelector("option[data-topic='" + key + "']");
-      if (!opt && key === "bid") {
-        opt = document.createElement("option");
-        opt.value = "Bid Advisor"; opt.textContent = "Bid Advisor"; opt.setAttribute("data-topic", "bid");
-        subject.appendChild(opt);
-      }
-      if (opt) { subject.value = opt.value; }
+  /* contact page: the "Write to me" button opens an email with a subject that matches a link such as /contact/?topic=ai */
+  var writeBtn = document.getElementById("write-btn");
+  if (writeBtn) {
+    var subjects = {
+      consultancy: "Discuss my business situation", strategy: "Strategy and planning", organisation: "Organisation",
+      performance: "Budgets and project performance", coaching: "Management support", erp: "ERP and systems",
+      ai: "Practical AI advice", guide: "A question about the ERP guide", bid: "Bid Advisor", other: "Something else"
+    };
+    var topic = (new URLSearchParams(window.location.search).get("topic") || "").replace(/[^a-z-]/g, "");
+    if (subjects[topic]) {
+      writeBtn.setAttribute("href", "mailto:info@belgraveconsultancy.com?subject=" + encodeURIComponent(subjects[topic]));
     }
   }
 
@@ -66,7 +64,7 @@
     var kind = f.getAttribute("data-form");
     if (started[kind]) { return; }
     started[kind] = true;
-    track(kind === "contact" ? "contact-form-start" : kind === "bid" ? "bid-form-start" : "resource-form-start");
+    track(kind === "contact" ? "contact-form-start" : kind === "bid" ? "bid-form-start" : kind === "withdraw" ? "withdraw-form-start" : "resource-form-start");
   });
 
   /* forms
@@ -146,18 +144,19 @@
 
       if (kind === "bid") {
         var ml = conf && conf.mailerlite;
-        if (!ml) { mailFallback(form, say); return; }
+        var wantsMail = !!(form.querySelector("input[name=consent]") || {}).checked;
+        var extra = (cfg.forms || {}).contact;
+        if ((wantsMail && !ml) || (!wantsMail && !(extra && typeof extra === "string"))) { mailFallback(form, say); return; }
         busy(true); say("Sending...", "");
         var answers = new FormData(form);
-        subscribe(ml, form.querySelector("input[name=email]").value)
+        (wantsMail ? subscribe(ml, form.querySelector("input[name=email]").value) : Promise.resolve())
           .then(function () {
-            var extra = (cfg.forms || {}).contact;
             if (extra && typeof extra === "string") {
               answers.append("subject", "Bid Advisor interest");
               return fetch(extra, { method: "POST", body: answers, headers: { Accept: "application/json" } }).catch(function () {});
             }
           })
-          .then(function () { track("bid-interest-sent"); done(form.getAttribute("data-ok") || "Thank you. I have your answer."); })
+          .then(function () { track("bid-interest-sent"); done((form.getAttribute("data-ok") || "Thank you. I have your answer.") + (wantsMail ? " I will email you when Bid Advisor is ready to try." : "")); })
           .catch(fail).then(function () { busy(false); });
         return;
       }
@@ -167,7 +166,7 @@
       if (!cEndpoint) { mailFallback(form, say); return; }
       busy(true); say("Sending...", "");
       fetch(cEndpoint, { method: "POST", body: new FormData(form), headers: { Accept: "application/json" } })
-        .then(function (r) { if (!r.ok) { throw new Error("bad status"); } track("contact-form-sent"); done(form.getAttribute("data-ok") || "Thank you. Your message has been sent."); })
+        .then(function (r) { if (!r.ok) { throw new Error("bad status"); } track(kind === "withdraw" ? "withdrawal-sent" : "contact-form-sent"); done(form.getAttribute("data-ok") || "Thank you. Your message has been sent."); })
         .catch(fail).then(function () { busy(false); });
     });
   });
@@ -224,7 +223,7 @@
       var msg, label;
       if (total <= 7) { label = "Start with preparation"; msg = "These answers suggest that some foundations need attention. Start by clarifying how the work runs, what the ERP needs to improve and who will lead the preparation."; }
       else if (total <= 11) { label = "Prepare first"; msg = "Some foundations are in place. Review the lowest-scoring area with your team before committing to a system or implementation plan."; }
-      else { label = "Looking solid"; msg = "These three foundations look strong. The full scorecard tests the other four: internal capacity, data quality, budget realism and change readiness."; }
+      else { label = "A strong starting point"; msg = "These three foundations look strong. The full scorecard tests the other four: internal capacity, data quality, budget realism and change readiness."; }
       result.hidden = false;
       result.querySelector(".score").innerHTML = total + "<small> / 15</small>";
       result.querySelector(".label").textContent = label;
