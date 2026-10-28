@@ -668,3 +668,6 @@ details.bid-form:last-of-type{border-bottom:0}
 .legal{justify-content:center;text-align:center}
 .foot-brand,.foot-grid{text-align:center}
 .foot-brand .brand{display:inline-block}
+
+.buy-split{display:grid;grid-template-columns:minmax(0,2fr) minmax(0,1fr);gap:32px;align-items:start}
+@media (max-width:860px){.buy-split{grid-template-columns:1fr}}
