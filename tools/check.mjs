@@ -81,7 +81,7 @@ for (const file of pages) {
   }
 
   // proof line wording must be the same everywhere it appears
-  for (const m of html.matchAll(/three[^<.]{0,40}ERP implementations?[^<.]{0,60}/gi)) proofLines.add(m[0].trim());
+  for (const m of html.replace(/<[^>]*>/g, "").matchAll(/three ERP implementations?(?:s+on the business side)?/gi)) proofLines.add(m[0].replace(/s+/g, " ").toLowerCase());
 }
 
 // sitemap lists exactly the indexable pages and each exists
