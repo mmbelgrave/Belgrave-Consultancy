@@ -678,3 +678,13 @@ main{flex:1 0 auto}
 /* buttons: equal width inside a group, full width on phones */
 .btn-row .btn{min-width:232px}
 @media (max-width:560px){.btn-row{flex-direction:column;align-items:stretch}.btn,.btn-row .btn{width:100%;min-width:0}}
+/* guide sample: page text */
+.page-text{margin-top:10px;max-width:820px}
+.page-text summary{cursor:pointer;font-weight:600;font-size:15px;color:var(--oxblood);padding:8px 0;min-height:44px;display:flex;align-items:center}
+.page-text-body{padding:6px 0 18px;border-top:1px solid var(--rule)}
+.page-text-body h2{font-size:22px;margin:.9em 0 .4em}
+.page-text-body h3{font-family:var(--sans);font-size:17px;margin:1.2em 0 .3em}
+.page-text-body p,.page-text-body li,.page-text-body dd{font-size:16.5px;max-width:68ch}
+.page-text-body dt{font-weight:600;margin-top:.9em}
+.page-text-body dd{margin:.2em 0 0}
+.page-text-body .pg{color:var(--slate);font-size:14px}
